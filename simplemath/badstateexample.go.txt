@@ -1,0 +1,58 @@
+package main
+
+import (
+	"math"
+	"mrigankapaul/simplemath"
+)
+
+type mathExpr = string
+
+const (
+	addExpr      = mathExpr("add")
+	subtractExpr = mathExpr("subtract")
+	multiplyExpr = mathExpr("multiply")
+)
+
+func main() {
+
+	// Bad state example
+	var funcs []func() int64 // slice of functions
+	for i := 0; i < 10; i++ {
+		cleanI := i
+		funcs = append(funcs, func() int64 { // appending to slice of funcs.
+			// return int64(math.Pow(float64(cleanI), 2)) // bad state
+			return int64(math.Pow(float64(cleanI), 2)) // fixed bad state.
+		})
+	}
+
+	for _, f := range funcs {
+		println(f()) // last state of i is being evaluated.
+	}
+}
+
+func powerOfTwo() func() int64 {
+	x := 1.0 // for maintaining the state within the function.
+	return func() int64 {
+		x++
+		return int64(math.Pow(x, 2))
+	}
+}
+
+func mathExpression(expr mathExpr) func(float64, float64) float64 {
+	switch expr {
+	case addExpr:
+		return simplemath.Add
+	case subtractExpr:
+		return simplemath.Subtract
+	case multiplyExpr:
+		return simplemath.Multiply
+	default:
+		return func(f1, f2 float64) float64 {
+			return 0
+		}
+	}
+}
+
+func double(f1, f2 float64, mathExpr func(float64, float64) float64) float64 {
+	return 2 * mathExpr(f1, f2)
+}

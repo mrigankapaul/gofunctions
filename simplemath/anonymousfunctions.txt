@@ -1,0 +1,11 @@
+import "fmt"
+
+func main() {
+	a := func(name string) string {
+		fmt.Printf("my first %s function", name)
+		return name
+	}
+
+	value := a("anonymous")
+	println(value)
+}

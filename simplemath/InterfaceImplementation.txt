@@ -1,0 +1,16 @@
+func main() {
+	var tripper http.RoundTripper = &RoundTripCounter{}
+	r, _ := http.NewRequest(http.MethodGet, "http://www.google.com", strings.NewReader("test call"))
+	_, _ = tripper.RoundTrip(r)
+}
+
+// RoundTripCounter ...
+type RoundTripCounter struct {
+	count int
+}
+
+// RoundTrip ....
+func (rt *RoundTripCounter) RoundTrip(*http.Request) (*http.Response, error) {
+	rt.count++
+	return nil, nil
+}

@@ -1,0 +1,30 @@
+package main
+
+import (
+	"errors"
+	"fmt"
+	"io"
+)
+
+func main() {
+	readSomething()
+}
+
+func readSomething() error {
+	var r io.Reader = BadReader{errors.New("my nonsense error")}
+	if _, err := r.Read([]byte("test something")); err != nil {
+		fmt.Printf("an error occured %s", err)
+		return err
+	}
+
+	return nil
+}
+
+// BadReader ...
+type BadReader struct {
+	err error
+}
+
+func (br BadReader) Read(p []byte) (n int, err error) {
+	return -1, br.err
+}

@@ -1,0 +1,45 @@
+package main
+
+import (
+	"io"
+)
+
+func main() {
+
+	if err := ReadFullFile(); err != nil {
+		println("something bad occurred")
+	}
+}
+
+func ReadFullFile() error {
+	var r io.Reader = &SimpleReader{}
+	for {
+		value, err := r.Read([]byte("text that does something"))
+
+		if err == io.EOF {
+			println("finished reading the file")
+			break
+		} else if err != nil {
+			return err
+		}
+
+		println(value)
+	}
+
+	return nil
+}
+
+// SimpleReader ...
+type SimpleReader struct {
+	count int
+}
+
+func (br *SimpleReader) Read(p []byte) (n int, err error) {
+
+	if br.count > 3 {
+		return 0, io.EOF
+	}
+
+	br.count++
+	return br.count, nil
+}

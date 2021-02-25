@@ -1,0 +1,65 @@
+package main
+
+import (
+	"io"
+)
+
+func main() {
+	if err := ReadFullFile(); err != nil {
+		println("something bad occurred")
+	}
+}
+
+// ReadFullFile ...
+func ReadFullFile() error {
+	var r io.ReadCloser = &SimpleReader{}
+	defer func() {
+		_ = r.Close()
+	}()
+
+	defer func() {
+		println("Before for loop")
+	}()
+
+	for {
+		value, err := r.Read([]byte("text that does something"))
+
+		if err == io.EOF {
+			println("finished reading the file")
+
+			break
+		} else if err != nil {
+			return err
+		}
+
+		println(value)
+	}
+
+	defer func() {
+		println("After for loop")
+	}()
+
+	return nil
+}
+
+// SimpleReader ...
+type SimpleReader struct {
+	count int
+}
+
+func (br *SimpleReader) Read(p []byte) (n int, err error) {
+
+	if br.count > 3 {
+		return 0, io.EOF
+		// return 0, errors.New("random error")
+	}
+
+	br.count++
+	return br.count, nil
+}
+
+// Close ...
+func (br *SimpleReader) Close() error {
+	println("Closing Reader")
+	return nil
+}

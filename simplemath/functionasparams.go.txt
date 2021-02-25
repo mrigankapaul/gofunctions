@@ -1,0 +1,45 @@
+package main
+
+import (
+	"fmt"
+	"mrigankapaul/simplemath"
+)
+
+type mathExpr = string
+
+const (
+	addExpr      = mathExpr("add")
+	subtractExpr = mathExpr("subtract")
+	multiplyExpr = mathExpr("multiply")
+)
+
+func main() {
+	expr := mathExpression(multiplyExpr)
+	println(expr(3, 2))
+	fmt.Printf("%f", double(3, 2, mathExpression(addExpr)))
+}
+
+// func mathExpression() func(float64, float64) float64 {
+// 	return func(f1, f2 float64) float64 {
+// 		return f1 + f2
+// 	}
+// }
+
+func mathExpression(expr mathExpr) func(float64, float64) float64 {
+	switch expr {
+	case addExpr:
+		return simplemath.Add
+	case subtractExpr:
+		return simplemath.Subtract
+	case multiplyExpr:
+		return simplemath.Multiply
+	default:
+		return func(f1, f2 float64) float64 {
+			return 0
+		}
+	}
+}
+
+func double(f1, f2 float64, mathExpr func(float64, float64) float64) float64 {
+	return 2 * mathExpr(f1, f2)
+}

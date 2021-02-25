@@ -1,0 +1,19 @@
+package main
+
+func main() {
+	p2 := powerOfTwo()
+	value := p2()
+	println(value)
+	value = p2()
+	println(value)
+	value = p2()
+	println(value)
+}
+
+func powerOfTwo() func() int64 {
+	x := 1.0 // for maintaining the state within the function.
+	return func() int64 {
+		x++
+		return int64(math.Pow(x, 2))
+	}
+}
